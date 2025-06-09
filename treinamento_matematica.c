@@ -70,13 +70,14 @@ int main(void)
 	int vidas = 3, pontos = 0;
 	int streaks = 0;
 
-	char texto_opera[4];
-	char parte_pergunta[5] = "é? ";
-
-	texto_opera[0] = " somado a     ";
-	texto_opera[1] = " subtraindo   ";
-	texto_opera[2] = " vezes        ";
-	texto_opera[3] = " dividido por ";
+	char texto_opera[4][16] =
+	{
+		" somado a ",
+		" subtraindo ",
+		" vezes ",
+		" dividido por"
+	};
+	char parte_pergunta[6] = " é? ";
 
 	while(vidas != 0)
 	{
@@ -138,7 +139,7 @@ int main(void)
 			resposta_certa = buffer / 10000.0;
 		}
 		sizeof(texto_opera[opera]);
-		cout << num[1] << texto_opera[opera] << parte_pergunta;
+		cout << num[1] << parte_pergunta;
 
 		estrutura(vidas, pontos, streaks, 5);
 		cout << "| -> " << endl;
