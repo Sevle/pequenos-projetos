@@ -75,7 +75,7 @@ int main(void)
 		" somado a ",
 		" subtraindo ",
 		" vezes ",
-		" dividido por"
+		" dividido por "
 	};
 	char parte_pergunta[6] = " é? ";
 
