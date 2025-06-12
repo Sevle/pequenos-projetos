@@ -2,21 +2,21 @@
 #include <random>
 using namespace std;
 
-void estrutura (int vida, int ponto, int streak, int modo)
+void estrutura(int x, int y, int z, int modo)
 {
-	int space_vida = vida * 3;
-	int space_ponto = ponto * 2;
-	int space_streak = streak * 2;
+	int abs_x = x * 3;
+	int abs_y = y * 2;
+	int abs_z = z * 2;
 	if(modo == 1)
 	{
 		int dif = 0;
 		int maior;
-		if(space_vida > space_ponto)
-			maior = space_vida;
-		if(space_vida < space_ponto)
-			maior = space_ponto;
-		if(space_vida == space_ponto)
-			maior = space_vida;
+		if(abs_x > abs_y)
+			maior = abs_x;
+		if(abx_x < abs_y)
+			maior = abs_y;
+		if(abs_x == abs_y)
+			maior = abs_x;
 
 		int buffer = 11 + maior;
 		for(int i = 0; i < buffer; i++)
@@ -25,45 +25,47 @@ void estrutura (int vida, int ponto, int streak, int modo)
 
 	if(modo == 2)
 	{
-		if(space_vida >= space_ponto)
+		if(abs_x >= abs_y)
 			cout << " ";
-		if(space_vida < space_ponto)
+		if(abs_x < abs_y)
 		{
-			int dif = space_ponto - space_vida + 2;
+			int dif = abs_y - abs_x + 2;
 			for(int i = 0; i < dif; i++)
 				cout << " ";
 		}
 	}
 	if(modo == 3)
 	{
-		if(space_ponto >= space_vida)
+		if(abs_y >= abs_x)
 			cout << " ";
-		if(space_ponto < space_vida)
+		if(abs_y < abs_x)
 		{
-			int dif = space_vida - space_ponto;
+			int dif = abs_x - abs_y;
 			for(int i = 0; i < dif; i++)
 				cout << " ";
 		}
 	}
 	if(modo == 4)
 	{
-                if(space_vida >= space_ponto)
+                if(abs_x >= abs_y)
                         cout << " ";
-                if(space_vida < space_ponto)
+                if(abs_x < abs_y)
                 {
-                        int dif = space_ponto - space_streak + 1;
+                        int dif = abs_y - abs_z + 1;
                         for(int i = 0; i < dif; i++)
                                 cout << " ";
                 }
 		else
 		{
-			int dif = space_vida - space_streak - 1;
+			int dif = abs_x - abs_z - 1;
 			for(int i = 0; i < dif; i++)
 				cout << " ";
 		}
 	}
 	(modo != 1) ? (cout << "|" << endl) : (cout << endl);
 }
+
+
 
 int main(void)
 {
@@ -77,6 +79,7 @@ int main(void)
 		" vezes ",
 		" dividido por "
 	};
+
 	char parte_pergunta[6] = " é? ";
 
 	while(vidas != 0)
@@ -144,6 +147,7 @@ int main(void)
 		estrutura(vidas, pontos, streaks, 5);
 		cout << "| -> " << endl;
 		estrutura(vidas, pontos, streaks, 1);
+		// códiog de escape em ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
 		cout << "\033[2A";
 		cout << "\033[5C";
 		cin >> resposta_player;
