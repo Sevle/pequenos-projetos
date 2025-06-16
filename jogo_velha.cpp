@@ -73,8 +73,8 @@ void desenhar()
       {
         if(tabuleiro[i][l] > 0 && m == 1) 
         {
-          if(tabuleiro[i][l] == 1) cout << "X";
-          else if(tabuleiro[i][l] == 2) cout << "O";
+          if(tabuleiro[i][l] == 1) cout << "O";
+          else if(tabuleiro[i][l] == 2) cout << "X";
         }
         else cout << " ";
       }
@@ -100,8 +100,8 @@ int main(void)
       primeira = 0;
     }
 
-    if(jogador % 2 == 0) cout << endl << "### TURNO DO JOGADOR 1 ( O ) ###";
-    else cout << endl << "### TURNO DO JOGADOR 2 ( X ) ###";
+    if(jogador % 2 == 0) cout << endl << "### TURNO DO JOGADOR 1 ( X ) ###";
+    else cout << endl << "### TURNO DO JOGADOR 2 ( O ) ###";
 
     cout << endl << "qual linha deseja marca?" << endl << "-> ";
     cin >> jogada[0];
