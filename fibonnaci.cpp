@@ -7,12 +7,9 @@ int main(void)
 	int size;
 	float qt_num;
 
-	// (int *) malloc (sizeof(size)*5)
 	cin >> qt_num;
 
-	// int const qt_num = qt_num_buffer;
-	//int num[qt_num];
-
+  // evitar o uso de int num[qt_num]
 	int * num = (int *) malloc (sizeof(int) * qt_num);
 
 	num[0] = 1;

@@ -1,10 +1,9 @@
 #include <iostream>
-#define TAM 27
 using namespace std;
 
 int main(void)
 {
-	char alfabeto[TAM] = "abcdefghijklmnopqrstuvwxyz";
+	char alfabeto[] = {"abcdefghijklmnopqrstuvwxyz"};
 	char letra_user[2];
 	int num[2];
 
@@ -14,12 +13,10 @@ int main(void)
 		cin >> letra_user[i];
 	}
 
-	for(int i = 0; i < TAM; i++)
+	for(int i = 0; i < sizeof(alfabeto); i++)
 	{
-		if(letra_user[0] == alfabeto[i])
-			num[0] = i;
-		if(letra_user[1] == alfabeto[i])
-			num[1] = i;
+		if(letra_user[0] == alfabeto[i]) num[0] = i;
+		if(letra_user[1] == alfabeto[i]) num[1] = i;
 	}
 	cout << endl;
 

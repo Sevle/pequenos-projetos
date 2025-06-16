@@ -4,7 +4,7 @@ using namespace std;
 
 void estrutura(int x, int y, int z, int modo)
 {
-	int abs_x = x * 3;
+  int abs_x = x * 3;
 	int abs_y = y * 2;
 	int abs_z = z * 2;
 	if(modo == 1)
@@ -13,14 +13,14 @@ void estrutura(int x, int y, int z, int modo)
 		int maior;
 		if(abs_x > abs_y)
 			maior = abs_x;
-		if(abx_x < abs_y)
+		if(abs_x < abs_y)
 			maior = abs_y;
 		if(abs_x == abs_y)
 			maior = abs_x;
 
 		int buffer = 11 + maior;
 		for(int i = 0; i < buffer; i++)
-			cout << "-";
+		cout << "-";
 	}
 
 	if(modo == 2)
@@ -47,20 +47,20 @@ void estrutura(int x, int y, int z, int modo)
 	}
 	if(modo == 4)
 	{
-                if(abs_x >= abs_y)
-                        cout << " ";
-                if(abs_x < abs_y)
-                {
-                        int dif = abs_y - abs_z + 1;
-                        for(int i = 0; i < dif; i++)
-                                cout << " ";
-                }
-		else
-		{
-			int dif = abs_x - abs_z - 1;
-			for(int i = 0; i < dif; i++)
-				cout << " ";
-		}
+    if(abs_x >= abs_y)
+      cout << " ";
+    if(abs_x < abs_y)
+    {
+      int dif = abs_y - abs_z + 1;
+      for(int i = 0; i < dif; i++)
+        cout << " ";
+    }
+  }
+	else
+	{
+	  int dif = abs_x - abs_z - 1;
+		for(int i = 0; i < dif; i++)
+			cout << " ";
 	}
 	(modo != 1) ? (cout << "|" << endl) : (cout << endl);
 }
@@ -70,11 +70,11 @@ void estrutura(int x, int y, int z, int modo)
 int main(void)
 {
 	int vidas = 3, pontos = 0;
-	int streaks = 0;
+	int volatile streaks = 0;
 
 	char texto_opera[4][16] =
 	{
-		" somado a ",
+	  " somado a ",
 		" subtraindo ",
 		" vezes ",
 		" dividido por "
@@ -141,13 +141,14 @@ int main(void)
 			int buffer = resposta_certa * 10000;
 			resposta_certa = buffer / 10000.0;
 		}
-		sizeof(texto_opera[opera]);
+
 		cout << num[1] << parte_pergunta;
 
 		estrutura(vidas, pontos, streaks, 5);
 		cout << "| -> " << endl;
 		estrutura(vidas, pontos, streaks, 1);
-		// códiog de escape em ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
+    
+		// ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
 		cout << "\033[2A";
 		cout << "\033[5C";
 		cin >> resposta_player;
@@ -157,15 +158,14 @@ int main(void)
 			pontos++;
 			streaks++;
 
-			if(streaks % 3 == 0)
-				vidas++;
+			if(streaks % 3 == 0) vidas++;
 		}
 		else
 		{
 			cout << endl << "errado, era " << resposta_certa << endl;
 			vidas--;
 			streaks = 0;
-
+      
 			if( (resposta_player > (resposta_certa * 0.9) ) && (resposta_player < (resposta_certa * 1.1) ) )
 					cout << "quase acertou" << endl;
 		}

@@ -15,10 +15,8 @@ int main(void)
 	}
 
 	for(int i = (num - 1); i > 2; i--)
-	{
-		if(num % i == 0)
-			primo = 0;
-	}
+		if(num % i == 0) 
+      primo = 0;
 
 	primo ? (cout << "é primo") : (cout << "não é primo");
 
