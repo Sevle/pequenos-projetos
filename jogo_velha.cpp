@@ -49,6 +49,20 @@ int fim_jogo()
   else return 1;
 }
 
+int empate()
+{
+  // 1 é porque não achou nenhum 0, portanto o tabuleiro não deu empate e ainda tem jogo
+  int vazio = 0;
+
+  for(int i = 0; i < ESCALA; i++)
+    for(int j = 0; j < ESCALA; j++)
+      if(tabuleiro[i][j] == 0)
+        vazio = 1;
+  
+  if(vazio) return 1;
+  else return 0;
+}
+
 void desenhar()
 {
   cout << "   ";
@@ -92,7 +106,7 @@ int main(void)
   int jogador = 0;
   int jogada[2];
   int primeira = 1;
-  while(fim_jogo())
+  while(fim_jogo() && empate())
   {
     if(primeira)
     {
@@ -126,4 +140,13 @@ int main(void)
       cout << "valor invalido, tente novamente" << endl;
     cout << endl;
   }
+
+  if(!empate())
+    cout << endl << "ninguem venceu, empate!";
+  else
+  {
+    if(jogador % 2 == 0) cout << endl << "jogador 2 venceu!" << endl;
+    else cout << endl << "jogador 1 venceu" << endl;
+  }
+
 }
