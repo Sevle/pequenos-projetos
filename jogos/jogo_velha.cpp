@@ -142,7 +142,7 @@ int main(void)
   }
 
   if(!empate())
-    cout << endl << "ninguem venceu, empate!";
+    cout << endl << "ninguem venceu, empate" << endl;
   else
   {
     if(jogador % 2 == 0) cout << endl << "jogador 2 venceu!" << endl;
