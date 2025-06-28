@@ -49,6 +49,8 @@ int main(void)
 
 	while(somatorio > 0)
 	{
+    somatorio = 0;
+
 		for(int i = 0; i < tam; i++)
 		{
 			int temp = 0;

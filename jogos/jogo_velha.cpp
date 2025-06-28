@@ -127,8 +127,7 @@ int main(void)
     
     if(verificar(jogada[0],jogada[1]))
     {
-      jogador = jogador % 2; 
-      
+      jogador = jogador % 2;  
       
       if(jogador) tabuleiro[jogada[0]][jogada[1]] = 1;
       else tabuleiro[jogada[0]][jogada[1]] = 2;

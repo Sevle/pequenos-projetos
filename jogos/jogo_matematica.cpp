@@ -2,75 +2,76 @@
 #include <random>
 using namespace std;
 
-void estrutura(int x, int y, int z, int modo)
+void teto_estrutura(int x, int y, int z)
 {
-  int abs_x = x * 3;
-	int abs_y = y * 2;
-	int abs_z = z * 2;
-	if(modo == 1)
-	{
-		int dif = 0;
-		int maior;
-		if(abs_x > abs_y)
-			maior = abs_x;
-		if(abs_x < abs_y)
-			maior = abs_y;
-		if(abs_x == abs_y)
-			maior = abs_x;
+  int status[3];
 
-		int buffer = 11 + maior;
-		for(int i = 0; i < buffer; i++)
-		cout << "-";
-	}
+  status[0] = x * 3;
+  status[1] = y * 2;
+  status[2] = z * 2;
 
-	if(modo == 2)
-	{
-		if(abs_x >= abs_y)
-			cout << " ";
-		if(abs_x < abs_y)
-		{
-			int dif = abs_y - abs_x + 2;
-			for(int i = 0; i < dif; i++)
-				cout << " ";
-		}
-	}
-	if(modo == 3)
-	{
-		if(abs_y >= abs_x)
-			cout << " ";
-		if(abs_y < abs_x)
-		{
-			int dif = abs_x - abs_y;
-			for(int i = 0; i < dif; i++)
-				cout << " ";
-		}
-	}
-	if(modo == 4)
-	{
-    if(abs_x >= abs_y)
-      cout << " ";
-    if(abs_x < abs_y)
-    {
-      int dif = abs_y - abs_z + 1;
-      for(int i = 0; i < dif; i++)
-        cout << " ";
-    }
-  }
-	else
-	{
-	  int dif = abs_x - abs_z - 1;
-		for(int i = 0; i < dif; i++)
-			cout << " ";
-	}
-	(modo != 1) ? (cout << "|" << endl) : (cout << endl);
+  for(int i = 0; i < 3; i++)
+    for(int j = 0; j < 3; j++)
+      if(status[j] > status[j+1] && j < 2)
+      {
+        int buffer = status[j];
+        status[j] = status[j+1];
+        status[j+1] = buffer;
+      }
+	
+	int buffer = 11 + status[2];
+
+	for(int i = 0; i < buffer; i++) 
+    cout << "-";
+  cout << endl;
 }
 
+void estrutura(int x, int y, int z, char linha)
+{
+  int status[3];
+  char id_status[3];
 
+  id_status[0] = 'v';
+  id_status[1] = 'p';
+  id_status[2] = 's';
+  status[0] = x * 3;
+  status[1] = y * 2;
+  status[2] = z * 2;
+
+  for(int i = 0; i < 3; i++)
+    for(int j = 0; j < 3; j++)
+      if(status[j] > status[j+1] && j < 2)
+      {
+        int buffer[2];
+
+        buffer[0] = status[j];
+        buffer[1] = id_status[j];
+        
+        status[j] = status[j+1];
+        status[j+1] = buffer[0];
+
+        id_status[j] = id_status[j+1];
+        id_status[j+1] = buffer[1];
+      }
+
+  if(id_status[2] == linha) cout << " ";
+  else
+  {
+    int id;
+    for(int i = 0; i < 2; i++)
+      if(id_status[i] == linha) id = i;
+
+    int dif = status[2] - status[id];
+    for(int i = 0; i < dif; i++) 
+      cout << " ";
+  }
+	cout << "|" << endl;
+}
 
 int main(void)
 {
 	int vidas = 3, pontos = 0;
-	int volatile streaks = 0;
+	int streaks = 0;
 
 	char texto_opera[4][16] =
 	{
@@ -87,55 +88,58 @@ int main(void)
 		random_device random;
 		mt19937 gen(random());
 		uniform_int_distribution<> distrib_numero(0, 999);
-		uniform_int_distribution<> distrib_operacao(0, 3);
-		estrutura(vidas, pontos, streaks, 1);
+		uniform_int_distribution<> distrib_operacao(0, 99);
+
+		float num[2], resposta_player, resposta_certa; 
+
+    for(int i = 0; i < 2; i++)
+      num[i] = distrib_numero(gen);
+
+		int opera = distrib_operacao(gen);
+
+    teto_estrutura(vidas, pontos, streaks);
 		cout << "| vidas: ";
 		for(int i = 0; i < vidas; i++)
 			cout << "<3 ";
 
-		estrutura(vidas, pontos, streaks, 2);
+		estrutura(vidas, pontos, streaks, 'v');
 		cout << "| pontos: ";
 		for(int i = 0; i < pontos; i++)
 			cout << "* ";
 
-		estrutura(vidas, pontos, streaks, 3);
+		estrutura(vidas, pontos, streaks, 'p');
 
 		cout << "| streak: ";
 		for(int i = 0; i < streaks; i++)
 			cout << "# ";
-		estrutura(vidas, pontos, streaks, 4);
 
-		estrutura(vidas, pontos, streaks, 1);
-		float num[2], resposta_player, resposta_certa;
-		num[0] = distrib_numero(gen);
-		num[1] = distrib_numero(gen);
-
-		int opera = distrib_operacao(gen);
+		estrutura(vidas, pontos, streaks, 's');
+		teto_estrutura(vidas, pontos, streaks);
 
 		cout << "| " << num[0];
 
 		// somatório
-		if(opera == 0)
+		if(opera < 5)
 		{
-			cout << texto_opera[opera];
+			cout << texto_opera[0];
 			resposta_certa = num[0] + num[1];
 		}
 		// subtração
-		if(opera == 1)
+		if(opera >= 5 && opera < 10)
 		{
-			cout << texto_opera[opera];
+			cout << texto_opera[1];
 			resposta_certa = num[0] - num[1];
 		}
 		// multiplicação
-		if(opera == 2)
+		if(opera >= 10 && opera < 60)
 		{
-			cout << texto_opera[opera];
+			cout << texto_opera[2];
 			resposta_certa = num[0] * num[1];
 		}
 		// divisão
-		if(opera == 3)
+		if(opera >= 60 && opera < 100)
 		{
-			cout << texto_opera[opera];
+			cout << texto_opera[3];
 			resposta_certa = num[0] / num[1];
 
 			int buffer = resposta_certa * 10000;
@@ -144,9 +148,8 @@ int main(void)
 
 		cout << num[1] << parte_pergunta;
 
-		estrutura(vidas, pontos, streaks, 5);
-		cout << "| -> " << endl;
-		estrutura(vidas, pontos, streaks, 1);
+		cout << endl << "| -> " << endl;
+    teto_estrutura(vidas, pontos, streaks);
     
 		// ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
 		cout << "\033[2A";
