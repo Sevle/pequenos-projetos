@@ -5,21 +5,17 @@ using namespace std;
 void teto_estrutura(int x, int y, int z)
 {
   int status[3];
+  int maior = 0;
 
   status[0] = x * 3;
   status[1] = y * 2;
   status[2] = z * 2;
-
+  
   for(int i = 0; i < 3; i++)
-    for(int j = 0; j < 3; j++)
-      if(status[j] > status[j+1] && j < 2)
-      {
-        int buffer = status[j];
-        status[j] = status[j+1];
-        status[j+1] = buffer;
-      }
-	
-	int buffer = 11 + status[2];
+    if(status[i] > maior)
+      maior = status[i];
+
+	int buffer = 11 + maior;
 
 	for(int i = 0; i < buffer; i++) 
     cout << "-";
