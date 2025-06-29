@@ -1,151 +1,199 @@
 #include <iostream>
 #include <random>
 using namespace std;
+#define QT_STATUS 3
+#define QT_OPERACAO 4
+int status[] = {3, 0, 0};
 
-void teto_estrutura(int x, int y, int z)
+void tratar_status(int *tam_estrutura, int modo)
 {
-  int status[3];
-  int maior = 0;
-
-  status[0] = x * 3;
-  status[1] = y * 2;
-  status[2] = z * 2;
-  
-  for(int i = 0; i < 3; i++)
-    if(status[i] > maior)
-      maior = status[i];
-
-	int buffer = 11 + maior;
-
-	for(int i = 0; i < buffer; i++) 
-    cout << "-";
-  cout << endl;
+  int multi[] = {3, 2, 2};
+  if(modo)
+    for(int i = 0; i < 5; i++)
+    {
+      status[i] *= multi[i];
+      status[i] += tam_estrutura[i];
+    }
+  else
+    for(int i = 0; i < 5; i++)
+    {
+      status[i] -= tam_estrutura[i];
+      status[i] /= multi[i];
+    }
 }
 
-void estrutura(int x, int y, int z, char linha)
+void teto_estrutura(int *tam_txt)
 {
-  int status[3];
-  char id_status[3];
+  int maior = 0;
+  int multi[] = {3, 2, 2};
+  tratar_status(tam_txt, 1); 
 
-  id_status[0] = 'v';
-  id_status[1] = 'p';
-  id_status[2] = 's';
-  status[0] = x * 3;
-  status[1] = y * 2;
-  status[2] = z * 2;
+  for(int i = 0; i < 5; i++)
+    if(status[i] >= maior) maior = status[i];
+  maior++;
+	for(int i = 0; i < maior; i++) 
+  {
+    if( (i == 0) || (i == maior - 1)) cout << "+";
+    else cout << "-";
+  }
+  cout << endl;
+  tratar_status(tam_txt, 0);
+}
 
-  for(int i = 0; i < 3; i++)
-    for(int j = 0; j < 3; j++)
-      if(status[j] > status[j+1] && j < 2)
-      {
-        int buffer[2];
+void estrutura(int *tam_txt, char linha)
+{
+  char id_status[] = {'v', 'p', 's', 'o', 'r'};
+  char id_maior;
+  int num_maior = 0;
+  tratar_status(tam_txt, 1);
 
-        buffer[0] = status[j];
-        buffer[1] = id_status[j];
-        
-        status[j] = status[j+1];
-        status[j+1] = buffer[0];
-
-        id_status[j] = id_status[j+1];
-        id_status[j+1] = buffer[1];
-      }
-
-  if(id_status[2] == linha) cout << " ";
-  else
+  for(int i = 0; i < 5; i++)
+    if(status[i] >= num_maior)
+    {
+      num_maior = status[i];
+      id_maior = id_status[i];
+    }
+  if(id_maior != linha)
   {
     int id;
-    for(int i = 0; i < 2; i++)
+    for(int i = 0; i < 5; i++)
       if(id_status[i] == linha) id = i;
 
-    int dif = status[2] - status[id];
+    int dif = num_maior - status[id];
     for(int i = 0; i < dif; i++) 
       cout << " ";
   }
 	cout << "|" << endl;
+  tratar_status(tam_txt, 0);
 }
 
 int main(void)
 {
-	int vidas = 3, pontos = 0;
-	int streaks = 0;
-
-	char texto_opera[4][16] =
+  enum Status {VIDAS, PONTOS, STREAKS};
+  enum Operador {SOMA, SUBT, MULTI, DIV};
+    
+  int tam_txt_status[QT_STATUS];
+  int tam_txt_operacao[QT_OPERACAO];
+  int tam_num[2];
+  int tam_pergunta;
+  int tam_pt;
+	char txt_operacao[QT_OPERACAO][20] =
 	{
 	  " somado a ",
 		" subtraindo ",
 		" vezes ",
 		" dividido por "
 	};
+  char txt_status[QT_STATUS][20] = 
+  {
+    "| vidas: ",
+    "| pontos: ",
+    "| streaks: "
+  };
 
-	char parte_pergunta[6] = " é? ";
+	char pt_pergunta[6] = " é? ";
 
-	while(vidas != 0)
+  for(int i = 0; i < 6; i++)
+    if(pt_pergunta[i] != '\0') tam_pt++;
+
+  for(int i = 0; i < QT_OPERACAO; i++)
+  {
+    int temp_soma = 0;
+    for(int j = 0; j < 20; j++)
+      if(txt_operacao[i][j] != '\0') temp_soma++;
+    tam_txt_operacao[i] = temp_soma;
+  }
+  for(int i = 0; i < QT_STATUS; i++)
+  {
+    int temp_soma = 0;
+    for(int j = 0; j < 20; j++)
+      if(txt_status[i][j] != '\0') temp_soma++; 
+    tam_txt_status[i] = temp_soma; 
+  }
+
+	while(status[VIDAS] != 0)
 	{
 		random_device random;
 		mt19937 gen(random());
 		uniform_int_distribution<> distrib_numero(0, 999);
 		uniform_int_distribution<> distrib_operacao(0, 99);
 
-		float num[2], resposta_player, resposta_certa; 
+		float num[2], resposta_player, resposta_certa;
 
     for(int i = 0; i < 2; i++)
+    {
       num[i] = distrib_numero(gen);
-
+      if(num[i] < 9) tam_num[i] = 1;
+      if(num[i] < 99 && num[i] > 9) tam_num[i] = 2;
+      if(num[i] > 99) tam_num[i] = 3;
+    }
 		int opera = distrib_operacao(gen);
+    int id_opera;
 
-    teto_estrutura(vidas, pontos, streaks);
-		cout << "| vidas: ";
-		for(int i = 0; i < vidas; i++)
+    if(opera < 5) id_opera = 0;
+		if(opera >= 5 && opera < 10) id_opera = 1;
+		if(opera >= 10 && opera < 60) id_opera = 2;
+		if(opera >= 60 && opera < 100) id_opera = 3;
+    
+    tam_pergunta = tam_num[0] + tam_num[1] + tam_pt + tam_txt_operacao[id_opera] + 1;
+    int tam_txt[5];
+    for(int i = 0; i < QT_STATUS; i++)
+        tam_txt[i] = tam_txt_status[i];
+    tam_txt[3] = tam_pergunta;
+    tam_txt[4] = 5;
+
+    teto_estrutura(tam_txt);
+		cout << txt_status[VIDAS];
+		for(int i = 0; i < status[VIDAS]; i++)
 			cout << "<3 ";
+		estrutura(tam_txt, 'v');
 
-		estrutura(vidas, pontos, streaks, 'v');
-		cout << "| pontos: ";
-		for(int i = 0; i < pontos; i++)
+		cout << txt_status[PONTOS];
+		for(int i = 0; i < status[PONTOS]; i++)
 			cout << "* ";
+		estrutura(tam_txt, 'p');
 
-		estrutura(vidas, pontos, streaks, 'p');
-
-		cout << "| streak: ";
-		for(int i = 0; i < streaks; i++)
+		cout << txt_status[STREAKS];
+		for(int i = 0; i < status[STREAKS]; i++)
 			cout << "# ";
-
-		estrutura(vidas, pontos, streaks, 's');
-		teto_estrutura(vidas, pontos, streaks);
+		estrutura(tam_txt,'s');
+		teto_estrutura(tam_txt);
 
 		cout << "| " << num[0];
 
 		// somatório
-		if(opera < 5)
+		if(id_opera == 0)
 		{
-			cout << texto_opera[0];
+			cout << txt_operacao[SOMA];
 			resposta_certa = num[0] + num[1];
 		}
 		// subtração
-		if(opera >= 5 && opera < 10)
+		if(id_opera == 1)
 		{
-			cout << texto_opera[1];
+			cout << txt_operacao[SUBT];
 			resposta_certa = num[0] - num[1];
 		}
 		// multiplicação
-		if(opera >= 10 && opera < 60)
+		if(id_opera == 2)
 		{
-			cout << texto_opera[2];
+			cout << txt_operacao[MULTI];
 			resposta_certa = num[0] * num[1];
 		}
 		// divisão
-		if(opera >= 60 && opera < 100)
+		if(id_opera == 3)
 		{
-			cout << texto_opera[3];
+			cout << txt_operacao[DIV];
 			resposta_certa = num[0] / num[1];
 
 			int buffer = resposta_certa * 10000;
 			resposta_certa = buffer / 10000.0;
 		}
 
-		cout << num[1] << parte_pergunta;
-
-		cout << endl << "| -> " << endl;
-    teto_estrutura(vidas, pontos, streaks);
+		cout << num[1] << pt_pergunta;
+    estrutura(tam_txt, 'o');
+		cout << "| -> ";
+    estrutura(tam_txt, 'r');
+    teto_estrutura(tam_txt);
     
 		// ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
 		cout << "\033[2A";
@@ -154,16 +202,16 @@ int main(void)
 		if(resposta_player == resposta_certa)
 		{
 			cout << endl << "correto" << endl;
-			pontos++;
-			streaks++;
+			status[PONTOS]++;
+			status[STREAKS]++;
 
-			if(streaks % 3 == 0) vidas++;
+			if(status[STREAKS] % 3 == 0) status[VIDAS]++;
 		}
 		else
 		{
 			cout << endl << "errado, era " << resposta_certa << endl;
-			vidas--;
-			streaks = 0;
+			status[VIDAS]--;
+			status[STREAKS] = 0;
       
 			if( (resposta_player > (resposta_certa * 0.9) ) && (resposta_player < (resposta_certa * 1.1) ) )
 					cout << "quase acertou" << endl;
