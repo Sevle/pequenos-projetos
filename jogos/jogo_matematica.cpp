@@ -40,9 +40,9 @@ void teto_estrutura(int *tam_txt)
 	tratar_status(tam_txt, 0);
 }
 
-void estrutura(int *tam_txt, char linha)
+void estrutura(int *tam_txt, int linha)
 {
-	char id_status[] = {'v', 'p', 's', 'o', 'r'};
+  int id_status[] = {0, 1, 2, 3, 4, 5};
 	char id_maior;
 	int num_maior = 0;
 	tratar_status(tam_txt, 1);
@@ -67,6 +67,27 @@ void estrutura(int *tam_txt, char linha)
 	tratar_status(tam_txt, 0);
 }
 
+void desenhar_status(int *tam_txt, char txt_status[][20], char icone_status[][4], int *status)
+{
+    teto_estrutura(tam_txt);
+    for(int i = 0; i < 3; i++)
+    {
+      cout << txt_status[i];
+      for(int j = 0; j < status[i]; j++)
+        cout << icone_status[i];
+      estrutura(tam_txt, i);
+    }
+    teto_estrutura(tam_txt);
+}
+
+int tam_string(char *string)
+{
+  int tam = 0;
+  while(string[tam] != '\0')
+    tam++;
+  return tam;
+}
+
 int main(void)
 {
 	enum Status {VIDAS, PONTOS, STREAKS};
@@ -78,7 +99,7 @@ int main(void)
 	int tam_num[2];
 	int tam_pergunta;
 	int tam_pt;
-	char pt_pergunta[6] = " C)? ";
+	char pt_pergunta[6] = " é? ";
 	char txt_operacao[QT_OPERACAO][20] =
 	{
 		" somado a ",
@@ -92,23 +113,15 @@ int main(void)
 		"| pontos: ",
 		"| streaks: "
 	};
+  char icone_status[QT_STATUS][4] = {"<3 ", "* ", "# "};
 
-	for(int i = 0; i < 6; i++)
-		if(pt_pergunta[i] != '\0') tam_pt++;
-
-	for(int i = 0; i < QT_OPERACAO; i++)
-	{
-		int tamanho = 0;
-		while(txt_operacao[i][tamanho] != '\0') tamanho++;
-		tam_txt_operacao[i] = tamanho;
-	}
-	for(int i = 0; i < QT_STATUS; i++)
-	{
-		int tamanho = 0;
-		while(txt_status[i][tamanho] != '\0') tamanho++;
-		tam_txt_status[i] = tamanho;
-	}
-
+  tam_pt = tam_string(pt_pergunta);
+  
+  for(int i = 0; i < 4; i++)
+    tam_txt_operacao[i] = tam_string(txt_operacao[i]);
+  for(int i = 0; i < 3; i++)
+    tam_txt_status[i] = tam_string(txt_status[i]);
+  
 	while(status[VIDAS] != 0)
 	{
 		random_device random;
@@ -139,44 +152,29 @@ int main(void)
 		tam_txt[3] = tam_pergunta;
 		tam_txt[4] = 5;
 
-		teto_estrutura(tam_txt);
-		cout << txt_status[VIDAS];
-		for(int i = 0; i < status[VIDAS]; i++)
-			cout << "<3 ";
-		estrutura(tam_txt, 'v');
-
-		cout << txt_status[PONTOS];
-		for(int i = 0; i < status[PONTOS]; i++)
-			cout << "* ";
-		estrutura(tam_txt, 'p');
-
-		cout << txt_status[STREAKS];
-		for(int i = 0; i < status[STREAKS]; i++)
-			cout << "# ";
-		estrutura(tam_txt,'s');
-		teto_estrutura(tam_txt);
+    desenhar_status(tam_txt, txt_status, icone_status, status);
 
 		cout << "| " << num[0];
 
-		// somatC3rio
+		// somatório
 		if(id_opera == 0)
 		{
 			cout << txt_operacao[SOMA];
 			resposta_certa = num[0] + num[1];
 		}
-		// subtraC'C#o
+		// subtração
 		if(id_opera == 1)
 		{
 			cout << txt_operacao[SUBT];
 			resposta_certa = num[0] - num[1];
 		}
-		// multiplicaC'C#o
+		// multiplicação
 		if(id_opera == 2)
 		{
 			cout << txt_operacao[MULTI];
 			resposta_certa = num[0] * num[1];
 		}
-		// divisC#o
+		// divisão
 		if(id_opera == 3)
 		{
 			cout << txt_operacao[DIV];
@@ -187,9 +185,9 @@ int main(void)
 		}
 
 		cout << num[1] << pt_pergunta;
-		estrutura(tam_txt, 'o');
+		estrutura(tam_txt, 3);
 		cout << "| -> ";
-		estrutura(tam_txt, 'r');
+		estrutura(tam_txt, 4);
 		teto_estrutura(tam_txt);
 
 		// ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
