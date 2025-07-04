@@ -53,10 +53,12 @@ int main(void)
 		cout << texto << endl << "-> ";
 		cin >> data_inserida[0];
 	}
-
-	(data_inserida[0] < 10) ? (cout << endl << "0" << data_inserida[0] << "/") : (cout << endl << data_inserida[0] << "/");
-
-	(data_inserida[1] < 10) ? (cout << "0" << data_inserida[1] << "/") : (cout << data_inserida[1] << "/");
+  cout << endl;
+  for(int i = 0; i < 2; i++)
+  {
+    if(data_inserida[i] < 10) cout << "0" << data_inserida[i] << "/";
+    else cout << endl << data_inserida[i] << "/";
+  }
 
 	cout << data_inserida[2] << endl;
 }

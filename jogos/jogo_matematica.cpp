@@ -1,32 +1,33 @@
 #include <iostream>
 #include <random>
+using namespace std;
+
 #define QT_STATUS 3
 #define QT_OPERACAO 4
-using namespace std;
+enum Status {VIDAS, PONTOS, STREAKS};
+enum Operador {SOMA, SUBT, MULTI, DIV};
 int status[] = {3, 0, 0};
 
-void tratar_status(int *tam_estrutura, int modo)
+void tratar_status(int *tam_estrutura, int *tam_icone, int modo)
 {
-	int multi[] = {3, 2, 2};
 	if(modo)
 		for(int i = 0; i < 5; i++)
 		{
-			status[i] *= multi[i];
+			status[i] *= tam_icone[i];
 			status[i] += tam_estrutura[i];
 		}
 	else
 		for(int i = 0; i < 5; i++)
 		{
 			status[i] -= tam_estrutura[i];
-			status[i] /= multi[i];
+			status[i] /= tam_icone[i];
 		}
 }
 
-void teto_estrutura(int *tam_txt)
+void teto_estrutura(int *tam_txt, int *tam_icone)
 {
 	int maior = 0;
-	int multi[] = {3, 2, 2};
-	tratar_status(tam_txt, 1);
+	tratar_status(tam_txt, tam_icone, 1);
 
 	for(int i = 0; i < 5; i++)
 		if(status[i] >= maior) maior = status[i];
@@ -37,15 +38,15 @@ void teto_estrutura(int *tam_txt)
 		else cout << "-";
 	}
 	cout << endl;
-	tratar_status(tam_txt, 0);
+	tratar_status(tam_txt, tam_icone, 0);
 }
 
-void estrutura(int *tam_txt, int linha)
+void estrutura(int *tam_txt, int *tam_icone,int linha)
 {
   int id_status[] = {0, 1, 2, 3, 4, 5};
 	char id_maior;
 	int num_maior = 0;
-	tratar_status(tam_txt, 1);
+	tratar_status(tam_txt, tam_icone, 1);
 
 	for(int i = 0; i < 5; i++)
 		if(status[i] >= num_maior)
@@ -64,20 +65,53 @@ void estrutura(int *tam_txt, int linha)
 			cout << " ";
 	}
 	cout << "|" << endl;
-	tratar_status(tam_txt, 0);
+	tratar_status(tam_txt, tam_icone, 0);
 }
 
-void desenhar_status(int *tam_txt, char txt_status[][20], char icone_status[][4], int *status)
+void desenhar_status(int *tam_txt, int *tam_icone, char txt_status[][20], char icone_status[][4])
 {
-    teto_estrutura(tam_txt);
-    for(int i = 0; i < 3; i++)
+    teto_estrutura(tam_txt, tam_icone);
+    for(int i = 0; i < QT_STATUS; i++)
     {
       cout << txt_status[i];
       for(int j = 0; j < status[i]; j++)
         cout << icone_status[i];
-      estrutura(tam_txt, i);
+      estrutura(tam_txt, tam_icone, i);
     }
-    teto_estrutura(tam_txt);
+    teto_estrutura(tam_txt, tam_icone);
+}
+
+int operacao(float *num, int id_operacao, char txt_operacao[][20])
+{
+  int resultado;
+  // somatório
+  if(id_operacao == 0)
+  {
+    cout << txt_operacao[SOMA];
+    resultado = num[0] + num[1];
+  }
+  // subtração
+  if(id_operacao == 1)
+  {
+    cout << txt_operacao[SUBT];
+    resultado = num[0] - num[1];
+  }
+  // multiplicação
+  if(id_operacao == 2)
+  {
+    cout << txt_operacao[MULTI];
+    resultado = num[0] * num[1];
+  }
+  // divisão
+  if(id_operacao == 3)
+  {
+    cout << txt_operacao[DIV];
+    resultado = num[0] / num[1];
+    // trunca 4 casas decimais
+    int buffer = resultado * 10000;
+    resultado = buffer / 10000.0;
+  }
+  return resultado;
 }
 
 int tam_string(char *string)
@@ -90,15 +124,10 @@ int tam_string(char *string)
 
 int main(void)
 {
-	enum Status {VIDAS, PONTOS, STREAKS};
-	enum Operador {SOMA, SUBT, MULTI, DIV};
+	int tam_txt[5], tam_num[2], tam_icone[QT_STATUS];
+	int tam_txt_status[QT_STATUS], tam_txt_operacao[QT_OPERACAO];
+	int tam_pergunta, tam_pt;
 
-	int tam_txt[5];
-	int tam_txt_status[QT_STATUS];
-	int tam_txt_operacao[QT_OPERACAO];
-	int tam_num[2];
-	int tam_pergunta;
-	int tam_pt;
 	char pt_pergunta[6] = " é? ";
 	char txt_operacao[QT_OPERACAO][20] =
 	{
@@ -116,10 +145,11 @@ int main(void)
   char icone_status[QT_STATUS][4] = {"<3 ", "* ", "# "};
 
   tam_pt = tam_string(pt_pergunta);
-  
-  for(int i = 0; i < 4; i++)
+  for(int i = 0; i < QT_STATUS; i++)
+    tam_icone[i] = tam_string(icone_status[i]);
+  for(int i = 0; i < QT_OPERACAO; i++)
     tam_txt_operacao[i] = tam_string(txt_operacao[i]);
-  for(int i = 0; i < 3; i++)
+  for(int i = 0; i < QT_STATUS; i++)
     tam_txt_status[i] = tam_string(txt_status[i]);
   
 	while(status[VIDAS] != 0)
@@ -139,56 +169,29 @@ int main(void)
 			if(num[i] > 99) tam_num[i] = 3;
 		}
 		int opera = distrib_operacao(gen);
-		int id_opera;
+		int id_operacao;
 
-		if(opera < 5) id_opera = 0;
-		if(opera >= 5 && opera < 10) id_opera = 1;
-		if(opera >= 10 && opera < 60) id_opera = 2;
-		if(opera >= 60 && opera < 100) id_opera = 3;
+		if(opera < 5) id_operacao = 0;
+		if(opera >= 5 && opera < 10) id_operacao = 1;
+		if(opera >= 10 && opera < 60) id_operacao = 2;
+		if(opera >= 60 && opera < 100) id_operacao = 3;
 
-		tam_pergunta = tam_num[0] + tam_num[1] + tam_pt + tam_txt_operacao[id_opera] + 1;
+		tam_pergunta = tam_num[0] + tam_num[1] + tam_pt + tam_txt_operacao[id_operacao] + 1;
 		for(int i = 0; i < QT_STATUS; i++)
 			tam_txt[i] = tam_txt_status[i];
 		tam_txt[3] = tam_pergunta;
 		tam_txt[4] = 5;
 
-    desenhar_status(tam_txt, txt_status, icone_status, status);
+    desenhar_status(tam_txt, tam_icone, txt_status, icone_status);
 
 		cout << "| " << num[0];
-
-		// somatório
-		if(id_opera == 0)
-		{
-			cout << txt_operacao[SOMA];
-			resposta_certa = num[0] + num[1];
-		}
-		// subtração
-		if(id_opera == 1)
-		{
-			cout << txt_operacao[SUBT];
-			resposta_certa = num[0] - num[1];
-		}
-		// multiplicação
-		if(id_opera == 2)
-		{
-			cout << txt_operacao[MULTI];
-			resposta_certa = num[0] * num[1];
-		}
-		// divisão
-		if(id_opera == 3)
-		{
-			cout << txt_operacao[DIV];
-			resposta_certa = num[0] / num[1];
-			// trunca 4 casas decimais
-			int buffer = resposta_certa * 10000;
-			resposta_certa = buffer / 10000.0;
-		}
+    resposta_certa = operacao(num, id_operacao, txt_operacao);
 
 		cout << num[1] << pt_pergunta;
-		estrutura(tam_txt, 3);
+		estrutura(tam_txt, tam_icone, 3);
 		cout << "| -> ";
-		estrutura(tam_txt, 4);
-		teto_estrutura(tam_txt);
+		estrutura(tam_txt, tam_icone, 4);
+		teto_estrutura(tam_txt, tam_icone);
 
 		// ANSI para retornar o curso 2 linhas pra cima e 5 para a esquerda
 		cout << "\033[2A";

@@ -1,5 +1,5 @@
 #include <iostream>
-#define ESCALA 3
+#define ESCALA 9
 using namespace std;
 int tabuleiro[ESCALA][ESCALA] = {0};
 
