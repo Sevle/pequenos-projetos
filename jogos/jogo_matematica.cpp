@@ -32,7 +32,7 @@ void desenharLinhas(int *tam_txt, int *tam_icone)
 
 	for(int i = 0; i < 5; i++)
 		if(status[i] >= maior) maior = status[i];
-	maior++;
+	    maior++;
 	for(int i = 0; i < maior; i++)
 	{
 		if( (i == 0) || (i == maior - 1)) cout << "+";
@@ -142,19 +142,33 @@ int tamanhoString(char *string)
   return tam;
 }
 
+int descobrirId(int seed_numero, int *probabilidade)
+{
+  int id;
+  int temp = 0;
+
+  for(int i = 0; i < QT_OPERACAO; i++)
+  {
+    if(i > 0) temp = probabilidade[i-1];
+    if(seed_numero <= probabilidade[i] && seed_numero > temp)
+     id = i;
+  }
+  return id;
+}
+
 int main(void)
 {
 	int tam_txt[5], tam_icone[QT_STATUS];
 	int tam_txt_status[QT_STATUS], tam_txt_operacao[QT_OPERACAO];
 	int tam_pergunta, tam_pt, tam_num;
-
+  int probabilidade[QT_OPERACAO] = {5, 10, 60, 100};
 	char pt_pergunta[6] = " é? ";
 	char txt_operacao[QT_OPERACAO][20] =
 	{
-		" somado a ",
-		" subtraindo ",
-		" vezes ",
-		" dividido por "
+		" + ",
+		" - ",
+		" * ",
+		" / "
 	};
 	char txt_status[QT_STATUS][20] =
 	{
@@ -186,13 +200,8 @@ int main(void)
 
     tam_num = tamanhoNumeros(num);
     
-		int opera = distrib_operacao(gen);
-		int id_operacao;
-
-		if(opera < 5) id_operacao = 0;
-		if(opera >= 5 && opera < 10) id_operacao = 1;
-		if(opera >= 10 && opera < 60) id_operacao = 2;
-		if(opera >= 60 && opera < 100) id_operacao = 3;
+		int opera = distrib_operacao(gen); 
+		int id_operacao = descobrirId(opera, probabilidade);
 
 		tam_pergunta = tam_num + tam_pt + tam_txt_operacao[id_operacao] + 1;
 		for(int i = 0; i < QT_STATUS; i++)
