@@ -44,7 +44,7 @@ void desenharLinhas(int *tam_txt, int *tam_icone)
 
 void alinharColunas(int *tam_txt, int *tam_icone,int linha)
 {
-  int id_status[] = {0, 1, 2, 3, 4, 5};
+  int id_status[] = {0, 1, 2, 3, 4};
 	char id_maior;
 	int num_maior = 0;
 	tratarStatus(tam_txt, tam_icone, 1);
@@ -84,7 +84,7 @@ void desenharStatus(int *tam_txt, int *tam_icone, char txt_status[][20], char ic
 
 int calcularResultado(float *num, int id_operacao, char txt_operacao[][20])
 {
-  int resultado;
+  float resultado;
   // somatório
   if(id_operacao == 0)
   {
@@ -122,7 +122,7 @@ int tamanhoNumeros(float *num)
   for(int i = 0; i < QT_NUMEROS; i++)
   {
     int tamanho = 1;
-    while(tamanho < num[i])
+    while(tamanho <= num[i])
     {
       tamanho *= 10;
       expoente[i]++;
@@ -144,7 +144,7 @@ int tamanhoString(char *string)
 
 int descobrirId(int seed_numero, int *probabilidade)
 {
-  int id;
+  int id = 0;
   int temp = 0;
 
   for(int i = 0; i < QT_OPERACAO; i++)
@@ -161,9 +161,10 @@ int main(void)
 	int tam_txt[5], tam_icone[QT_STATUS];
 	int tam_txt_status[QT_STATUS], tam_txt_operacao[QT_OPERACAO];
 	int tam_pergunta, tam_pt, tam_num;
+  //int **tam
   int probabilidade[QT_OPERACAO] = {5, 10, 60, 100};
 	char pt_pergunta[6] = " é? ";
-	char txt_operacao[QT_OPERACAO][20] =
+  char txt_operacao[QT_OPERACAO][20] =
 	{
 		" + ",
 		" - ",
@@ -190,7 +191,7 @@ int main(void)
 	{
 		random_device random;
 		mt19937 gen(random());
-		uniform_int_distribution<> distrib_numero(0, 999);
+		uniform_int_distribution<> distrib_numero(1, 999);
 		uniform_int_distribution<> distrib_operacao(0, 99);
 
 		float num[QT_NUMEROS], resposta_player, resposta_certa;
